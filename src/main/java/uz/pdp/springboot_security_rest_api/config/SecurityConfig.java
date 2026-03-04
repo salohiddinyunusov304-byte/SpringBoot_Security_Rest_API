@@ -57,6 +57,7 @@ public class SecurityConfig {
                 }))
                 .csrf(AbstractHttpConfigurer::disable) // csrf ni disable qiladi
                 .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/api/auth/**").permitAll()
                         .anyRequest()
                         .fullyAuthenticated() // remember me degan narsa bolmaydi doim har sfar login qiladi
                 ) // istalgan sorovga fullyAutheticated ni taminlaydi
