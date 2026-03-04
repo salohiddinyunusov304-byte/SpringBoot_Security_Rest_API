@@ -1,5 +1,6 @@
 package uz.pdp.springboot_security_rest_api.security.jwt;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -21,7 +22,7 @@ public class JwtTokenUtil {
                 .setSubject(username)
                 .setIssuedAt(new Date())
                 .setIssuer("http://g58.uz")
-                .setExpiration(new Date(System.currentTimeMillis() + 24 * 60 * 60))
+                .setExpiration(new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000))
                 .signWith(signKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -30,5 +31,31 @@ public class JwtTokenUtil {
         Base64.Decoder decoder = Base64.getDecoder();
         byte[] bytes = decoder.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(bytes);
+    }
+
+    public String getUsernameFromToken(String token) {
+        Claims claims = getClaims(token);
+
+         return claims.getSubject(); // username olindi
+
+    }
+
+    private Claims getClaims(String token) {
+        return Jwts.parser()
+                .setSigningKey(signKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
+    public boolean isValidToken(String token) {
+        try {
+            Claims claims = getClaims(token);
+            Date expiration = claims.getExpiration();
+            return expiration.after(new Date());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }
