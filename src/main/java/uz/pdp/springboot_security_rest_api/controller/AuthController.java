@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import uz.pdp.springboot_security_rest_api.payload.TokenRequest;
+import uz.pdp.springboot_security_rest_api.security.jwt.JwtTokenUtil;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -17,6 +18,7 @@ import uz.pdp.springboot_security_rest_api.payload.TokenRequest;
 public class AuthController {
     private final UserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
+    private final JwtTokenUtil jwtTokenUtil;
 
     @PostMapping("/token")
     public String token(@RequestBody TokenRequest tokenRequest) {
@@ -25,6 +27,6 @@ public class AuthController {
         if (userDetails == null || !passwordEncoder.matches(tokenRequest.password(), userDetails.getPassword())) {
             throw new BadCredentialsException("Invalid username or password");
         }
-        return "Generated JWT Token";
+        return jwtTokenUtil.generateToken(tokenRequest.username()) ;
     }
 }
