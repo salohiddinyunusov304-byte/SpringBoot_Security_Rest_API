@@ -3,8 +3,6 @@ package uz.pdp.springboot_security_rest_api.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
-
 @Getter
 @Setter
 @ToString
