@@ -86,7 +86,7 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationManager authenticationManager() {
-        return new ProviderManager(authenticationProvider() );
+        return new ProviderManager(authenticationProvider());
     }
 
     @Bean

@@ -1,7 +1,6 @@
 package uz.pdp.springboot_security_rest_api.security.jwt;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -19,12 +18,12 @@ public class JwtTokenUtil {
     public String generateToken(@NonNull String username) {
 
         return Jwts.builder()
-                .setSubject(username)
-                .setIssuedAt(new Date())
-                .setIssuer("http://g58.uz")
-                .setExpiration(new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000))
-                .signWith(signKey(), SignatureAlgorithm.HS256)
-                .compact();
+                .setSubject(username) // username ni token ichiga qoyadi
+                .setIssuedAt(new Date()) // qachon yaratilgani
+                .setIssuer("http://g58.uz") // kim tomonidan yaratilgani
+                .setExpiration(new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000)) // amal qilish muddati
+                .signWith(signKey(), SignatureAlgorithm.HS256) // qande algoritmdan foydalanadi
+                .compact(); // tayyor JWT Token qaytaradi
     }
 
     private Key signKey() {
@@ -34,9 +33,9 @@ public class JwtTokenUtil {
     }
 
     public String getUsernameFromToken(String token) {
-        Claims claims = getClaims(token);
+        Claims claims = getClaims(token); // header.payload.signaturedan payloadni oladi
 
-         return claims.getSubject(); // username olindi
+        return claims.getSubject(); // username olindi
 
     }
 

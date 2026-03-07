@@ -15,19 +15,21 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 @RequiredArgsConstructor
+//OncePerRequestFilter - har bir request uchun faqat bir martta ishlaydi shuning uhcun session kerak emas
 public class JwtTokenFilter extends OncePerRequestFilter {
     private final JwtTokenUtil jwtTokenUtil;
     private final UserDetailsService userDetailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String authorization = request.getHeader("Authorization");
+//        Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... - request keladi
+        String authorization = request.getHeader("Authorization"); // Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... oladi
         if (authorization == null || authorization.isEmpty()) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        String token = authorization.substring(7);
+        String token = authorization.substring(7); // eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... - Token qism
         if (!jwtTokenUtil.isValidToken(token)) {
             filterChain.doFilter(request, response);
             return;
